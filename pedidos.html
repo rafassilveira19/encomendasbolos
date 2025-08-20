@@ -22,20 +22,25 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
+      table-layout: fixed;
     }
     th, td {
-      padding: 10px;
-      border: 1px solid #d06e9e;
-      text-align: left;
+      border: 1px solid #000;
+  padding: 6px;
+  text-align: left;
+  word-wrap: break-word;
     }
     th {
       background-color: #d06e9e;
       color: white;
     }
-    tr:nth-child(even) {
-      background-color: #ffe6f0;
-    }
+    th:nth-child(1), td:nth-child(1) { width: 20%; } 
+th:nth-child(2), td:nth-child(2) { width: 20%; } 
+th:nth-child(3), td:nth-child(3) { width: 10%; } 
+th:nth-child(4), td:nth-child(4) { width: 15%; } 
+th:nth-child(5), td:nth-child(5) { width: 15%; } 
+th:nth-child(6), td:nth-child(6) { width: 10%; } 
+th:nth-child(7), td:nth-child(7) { width: 10%; }
     #imprimir {
       background-color: #d06e9e;
       color: white;
@@ -201,3 +206,4 @@
 
 </body>
 </html>
+
