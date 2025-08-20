@@ -57,6 +57,7 @@
   
   <button id="imprimir">Imprimir Pedidos Ativos</button>
   <div id="abas">
+    <button id="verAtivos">Aba do Confeiteiro</button>
     <button id="abaAtivos">Pedidos Ativos</button>
     <button id="abaFinalizados">Pedidos Finalizados</button>
   </div>
@@ -85,6 +86,11 @@
     </table>
   </div>
 
+  <script>
+  document.getElementById('verAtivos').addEventListener('click', () => {
+    window.location.href = 'pedidos.html';
+  });
+</script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   

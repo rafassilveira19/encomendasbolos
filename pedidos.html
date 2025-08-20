@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Pedidos Ativos</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      background: #fff;
+      color: #333;
+    }
+    h1 {
+      color: #d06e9e;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: #d06e9e;
+      margin-top: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #d06e9e;
+      text-align: left;
+    }
+    th {
+      background-color: #d06e9e;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #ffe6f0;
+    }
+    #imprimir {
+      background-color: #d06e9e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      float: right;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Pedidos Ativos</h1>
+<button id="imprimir">Imprimir Pedidos Ativos</button>
+
+<div id="pedidosContainer"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBM94SV8JU1dsuHl_SxChg4m_OmvNC0WqM",
+    authDomain: "encomendas-afe75.firebaseapp.com",
+    projectId: "encomendas-afe75",
+    storageBucket: "encomendas-afe75.firebasestorage.app",
+    messagingSenderId: "271558647148",
+    appId: "1:271558647148:web:46eb123860c9efb2dfe749",
+    measurementId: "G-S9DWGLFT0H"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const pedidosCollection = db.collection('pedidos');
+
+  const container = document.getElementById('pedidosContainer');
+  const btnImprimir = document.getElementById('imprimir');
+
+  pedidosCollection.onSnapshot((snapshot) => {
+    const pedidos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(p => !p.entregue)
+      .sort((a,b) => a.dataOrdenacao - b.dataOrdenacao);
+
+    renderPedidos(pedidos);
+  });
+
+  function renderPedidos(pedidos) {
+    container.innerHTML = '';
+
+    const pedidosPorData = {};
+    pedidos.forEach(p => {
+      if(!pedidosPorData[p.data]) pedidosPorData[p.data] = [];
+      pedidosPorData[p.data].push(p);
+    });
+
+    for (const data of Object.keys(pedidosPorData).sort()) {
+      const titulo = document.createElement('h2');
+      titulo.textContent = data;
+      container.appendChild(titulo);
+
+      const tabela = document.createElement('table');
+      tabela.innerHTML = `
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Bolo</th>
+            <th>Tamanho</th>
+            <th>Horário</th>
+            <th>Entrega/Retirada</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+      container.appendChild(tabela);
+
+      const tbody = tabela.querySelector('tbody');
+      pedidosPorData[data].forEach(p => {
+        const linha = document.createElement('tr');
+        linha.innerHTML = `
+          <td>${p.nome}</td>
+          <td>${p.pedido}</td>
+          <td>${p.tamanho}</td>
+          <td>${p.hora}</td>
+          <td>${p.entrega}</td>
+        `;
+        tbody.appendChild(linha);
+      });
+    }
+  }
+
+  btnImprimir.addEventListener('click', () => {
+    const printWindow = window.open('', '', 'width=900,height=600');
+
+    pedidosCollection.get().then(snapshot => {
+      const pedidos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(p => !p.entregue)
+        .sort((a,b)=>a.dataOrdenacao - b.dataOrdenacao);
+
+      const pedidosPorData = {};
+      pedidos.forEach(p => {
+        if(!pedidosPorData[p.data]) pedidosPorData[p.data] = [];
+        pedidosPorData[p.data].push(p);
+      });
+
+      let html = `
+        <html>
+        <head>
+          <title>Pedidos Ativos</title>
+          <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background: #fff; color: #333; }
+            h2 { color: #d06e9e; margin-top: 30px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            th, td { padding: 10px; border: 1px solid #d06e9e; text-align: left; }
+            th { background-color: #d06e9e; color: white; }
+            tr:nth-child(even) { background-color: #ffe6f0; }
+          </style>
+        </head>
+        <body>
+          <h1>Pedidos Ativos</h1>
+      `;
+
+      for (const data of Object.keys(pedidosPorData).sort()) {
+        html += `<h2>${data}</h2>`;
+        html += `<table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Bolo</th>
+              <th>Tamanho</th>
+              <th>Horário</th>
+              <th>Entrega/Retirada</th>
+            </tr>
+          </thead>
+          <tbody>
+        `;
+        pedidosPorData[data].forEach(p => {
+          html += `<tr>
+            <td>${p.nome}</td>
+            <td>${p.pedido}</td>
+            <td>${p.tamanho}</td>
+            <td>${p.hora}</td>
+            <td>${p.entrega}</td>
+          </tr>`;
+        });
+        html += `</tbody></table>`;
+      }
+
+      html += `</body></html>`;
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    });
+  });
+</script>
+
+</body>
+</html>
