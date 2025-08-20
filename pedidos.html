@@ -26,21 +26,16 @@
     }
     th, td {
       border: 1px solid #000;
-  padding: 6px;
-  text-align: left;
-  word-wrap: break-word;
+      padding: 6px;
+      text-align: left;
+      word-wrap: break-word;
+      text-align: center;
+      font-weight: bold;
     }
     th {
       background-color: #d06e9e;
       color: white;
     }
-    th:nth-child(1), td:nth-child(1) { width: 20%; } 
-th:nth-child(2), td:nth-child(2) { width: 20%; } 
-th:nth-child(3), td:nth-child(3) { width: 10%; } 
-th:nth-child(4), td:nth-child(4) { width: 15%; } 
-th:nth-child(5), td:nth-child(5) { width: 15%; } 
-th:nth-child(6), td:nth-child(6) { width: 10%; } 
-th:nth-child(7), td:nth-child(7) { width: 10%; }
     #imprimir {
       background-color: #d06e9e;
       color: white;
@@ -97,44 +92,46 @@ th:nth-child(7), td:nth-child(7) { width: 10%; }
       pedidosPorData[p.data].push(p);
     });
 
-    for (const data of Object.keys(pedidosPorData).sort()) {
-      const titulo = document.createElement('h2');
-      titulo.textContent = data;
-      container.appendChild(titulo);
+    Object.keys(pedidosPorData)
+      .sort((a, b) => pedidosPorData[a][0].dataOrdenacao - pedidosPorData[b][0].dataOrdenacao)
+      .forEach(data => {
+        const titulo = document.createElement('h2');
+        titulo.textContent = data;
+        container.appendChild(titulo);
 
-      const tabela = document.createElement('table');
-      tabela.innerHTML = `
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Bolo</th>
-            <th>Tamanho</th>
-            <th>Horário</th>
-            <th>Entrega/Retirada</th>
-            <th>Observação</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      `;
-      container.appendChild(tabela);
-
-      const tbody = tabela.querySelector('tbody');
-      pedidosPorData[data].forEach(p => {
-        const linha = document.createElement('tr');
-        linha.innerHTML = `
-          <td>${p.nome}</td>
-          <td>${p.pedido}</td>
-          <td>${p.tamanho}</td>
-          <td>${p.hora}</td>
-          <td>${p.entrega}</td>
-          <td>${p.observacao || ""}</td>
-
+        const tabela = document.createElement('table');
+        tabela.innerHTML = `
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Bolo</th>
+              <th>Tamanho</th>
+              <th>Horário</th>
+              <th>Entrega/Retirada</th>
+              <th>Observação</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
         `;
-        tbody.appendChild(linha);
+        container.appendChild(tabela);
+
+        const tbody = tabela.querySelector('tbody');
+        pedidosPorData[data].forEach(p => {
+          const linha = document.createElement('tr');
+          linha.innerHTML = `
+            <td>${p.nome}</td>
+            <td>${p.pedido}</td>
+            <td>${p.tamanho}</td>
+            <td>${p.hora}</td>
+            <td>${p.entrega}</td>
+            <td>${p.observacao || ""}</td>
+          `;
+          tbody.appendChild(linha);
+        });
       });
-    }
   }
 
+  
   btnImprimir.addEventListener('click', () => {
     const printWindow = window.open('', '', 'width=900,height=600');
 
@@ -156,8 +153,8 @@ th:nth-child(7), td:nth-child(7) { width: 10%; }
           <style>
             body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background: #fff; color: #333; }
             h2 { color: #d06e9e; margin-top: 30px; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-            th, td { padding: 10px; border: 1px solid #d06e9e; text-align: left; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+            th, td { padding: 6px; border: 1px solid #000; text-align: left; word-wrap: break-word; }
             th { background-color: #d06e9e; color: white; }
             tr:nth-child(even) { background-color: #ffe6f0; }
           </style>
@@ -166,33 +163,35 @@ th:nth-child(7), td:nth-child(7) { width: 10%; }
           <h1>Pedidos Ativos</h1>
       `;
 
-      for (const data of Object.keys(pedidosPorData).sort()) {
-        html += `<h2>${data}</h2>`;
-        html += `<table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Bolo</th>
-              <th>Tamanho</th>
-              <th>Horário</th>
-              <th>Entrega/Retirada</th>
-              <th>Observação</th>
-            </tr>
-          </thead>
-          <tbody>
-        `;
-        pedidosPorData[data].forEach(p => {
-          html += `<tr>
-            <td>${p.nome}</td>
-            <td>${p.pedido}</td>
-            <td>${p.tamanho}</td>
-            <td>${p.hora}</td>
-            <td>${p.entrega}</td>
-             <td>${p.observacao || ""}</td>
-          </tr>`;
+      Object.keys(pedidosPorData)
+        .sort((a, b) => pedidosPorData[a][0].dataOrdenacao - pedidosPorData[b][0].dataOrdenacao)
+        .forEach(data => {
+          html += `<h2>${data}</h2>`;
+          html += `<table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Bolo</th>
+                <th>Tamanho</th>
+                <th>Horário</th>
+                <th>Entrega/Retirada</th>
+                <th>Observação</th>
+              </tr>
+            </thead>
+            <tbody>
+          `;
+          pedidosPorData[data].forEach(p => {
+            html += `<tr>
+              <td>${p.nome}</td>
+              <td>${p.pedido}</td>
+              <td>${p.tamanho}</td>
+              <td>${p.hora}</td>
+              <td>${p.entrega}</td>
+              <td>${p.observacao || ""}</td>
+            </tr>`;
+          });
+          html += `</tbody></table>`;
         });
-        html += `</tbody></table>`;
-      }
 
       html += `</body></html>`;
       printWindow.document.write(html);
@@ -206,4 +205,3 @@ th:nth-child(7), td:nth-child(7) { width: 10%; }
 
 </body>
 </html>
-
