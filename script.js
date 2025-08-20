@@ -25,31 +25,33 @@ const firebaseConfig = {
   
  
   form.addEventListener('submit', async (e) => {
-    e.preventDefault(); 
-  
-    
-    const nome = document.getElementById('nome').value;
-    const pedido = document.getElementById('pedido').value;
-    const tamanho = document.getElementById('tamanho').value;
-    const data = document.getElementById('data').value;
-    const hora = document.getElementById('hora').value;
-    const entrega = document.getElementById('entrega').value;
-    const observacao = document.getElementById('observacao').value;
-  
-    
-    try {
-      await pedidosCollection.add({
-        nome,
-        pedido,
-        tamanho,
-        data,
-        hora,
-        entrega,
-        observacao,
-        entregue: false,
-        createdAt: firebase.firestore.Timestamp.now()
-      });
-      form.reset();
+  e.preventDefault();
+
+  const nome = document.getElementById('nome').value;
+  const pedido = document.getElementById('pedido').value;
+  const tamanho = document.getElementById('tamanho').value;
+  const dataInput = document.getElementById('data').value; // yyyy-mm-dd
+  const [ano, mes, dia] = dataInput.split('-');
+  const dataFormatada = `${dia}/${mes}/${ano}`; // dd/mm/yyyy
+  const hora = document.getElementById('hora').value;
+  const entrega = document.getElementById('entrega').value;
+  const observacao = document.getElementById('observacao').value;
+
+  await pedidosCollection.add({
+    nome,
+    pedido,
+    tamanho,
+    data: dataFormatada, // aqui salvamos a data já no formato DD/MM/YYYY
+    hora,
+    entrega,
+    observacao,
+    entregue: false,
+    createdAt: firebase.firestore.Timestamp.now()
+  });
+
+  form.reset();
+});
+
     } catch(err) {
       console.error("Erro ao adicionar pedido:", err);
     }
@@ -264,4 +266,5 @@ const firebaseConfig = {
   function compararData(a,b) {
     return new Date(a) - new Date(b);
   }
+
   
