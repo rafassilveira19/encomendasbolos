@@ -26,7 +26,7 @@ form.addEventListener('submit', async (e) => {
   const nome = document.getElementById('nome').value;
   const pedido = document.getElementById('pedido').value;
   const tamanho = document.getElementById('tamanho').value;
-  const dataInput = document.getElementById('data').value; // yyyy-mm-dd
+  const dataInput = document.getElementById('data').value; 
   const hora = document.getElementById('hora').value;
   const entrega = document.getElementById('entrega').value;
   const observacao = document.getElementById('observacao').value;
@@ -37,8 +37,8 @@ form.addEventListener('submit', async (e) => {
   }
 
   const [ano, mes, dia] = dataInput.split('-');
-  const dataFormatada = `${dia}/${mes}/${ano}`; // para exibição
-  const dataOrdenacao = parseInt(`${ano}${mes}${dia}`); // para ordenação
+  const dataFormatada = `${dia}/${mes}/${ano}`; 
+  const dataOrdenacao = parseInt(`${ano}${mes}${dia}`); 
 
   try {
     await pedidosCollection.add({
@@ -59,7 +59,6 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// Troca de abas
 abaAtivos.addEventListener('click', () => {
   divAtivos.style.display = 'block';
   divFinalizados.style.display = 'none';
@@ -69,7 +68,7 @@ abaFinalizados.addEventListener('click', () => {
   divFinalizados.style.display = 'block';
 });
 
-// Atualização em tempo real
+
 pedidosCollection.onSnapshot((snapshot) => {
   const pedidosData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   atualizarTabelasFirebase(pedidosData);
@@ -134,7 +133,6 @@ function atualizarTabelasFirebase(pedidosData) {
   }
 }
 
-// Atualiza tabela de pedidos finalizados
 function atualizarFinalizadosFirebase(pedidosData) {
   tabelaFinalizados.innerHTML = '';
   const finalizados = pedidosData.filter(p => p.entregue);
@@ -159,7 +157,7 @@ function atualizarFinalizadosFirebase(pedidosData) {
   });
 }
 
-// Marcar como entregue
+
 divAtivos.addEventListener('change', async (e) => {
   if(e.target.type === 'checkbox') {
     const id = e.target.dataset.id;
@@ -167,7 +165,7 @@ divAtivos.addEventListener('change', async (e) => {
   }
 });
 
-// Excluir pedido
+
 divAtivos.addEventListener('click', async (e) => {
   if(e.target.classList.contains('excluir')) {
     await excluirPedido(e.target.dataset.id);
@@ -188,7 +186,7 @@ async function excluirPedido(id) {
   }
 }
 
-// Impressão
+
 btnImprimir.addEventListener('click', () => {
   const printWindow = window.open('', '', 'width=900,height=600');
 

@@ -106,6 +106,7 @@
             <th>Tamanho</th>
             <th>Horário</th>
             <th>Entrega/Retirada</th>
+            <th>Observação</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -121,6 +122,8 @@
           <td>${p.tamanho}</td>
           <td>${p.hora}</td>
           <td>${p.entrega}</td>
+          <td>${p.observacao || ""}</td>
+
         `;
         tbody.appendChild(linha);
       });
@@ -168,6 +171,7 @@
               <th>Tamanho</th>
               <th>Horário</th>
               <th>Entrega/Retirada</th>
+              <th>Observação</th>
             </tr>
           </thead>
           <tbody>
@@ -179,6 +183,7 @@
             <td>${p.tamanho}</td>
             <td>${p.hora}</td>
             <td>${p.entrega}</td>
+             <td>${p.observacao || ""}</td>
           </tr>`;
         });
         html += `</tbody></table>`;
