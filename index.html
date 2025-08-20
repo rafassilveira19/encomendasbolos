@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Pedidos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Registrar Pedido</h1>
+
+  <form id="pedidoForm">
+    <input type="text" id="nome" placeholder="Nome do Cliente" required>
+
+    <label for="pedido">Bolo:</label>
+    <select id="pedido" required>
+      <option value="" disabled selected hidden>- Selecione o bolo -</option>
+      <option value="Caramelo Salgado">Caramelo Salgado</option>
+      <option value="Chocolatudo">Chocolatudo</option>
+      <option value="Floresta Negra">Floresta Negra</option>
+      <option value="Léo Ávila">Léo Ávila</option>
+      <option value="Marta Rocha Naked">Marta Rocha Naked</option>
+      <option value="Marta Rocha Tradicional">Marta Rocha Tradicional</option>
+      <option value="Pistache com Chocolate">Pistache com Chocolate</option>
+      <option value="Pistache com Frutas Vermelhas">Pistache com Frutas Vermelhas</option>
+      <option value="Três Amores">Três Amores</option>
+    </select>
+
+    <label for="tamanho">Tamanho:</label>
+    <select id="tamanho" required>
+      <option value="" disabled selected hidden>- Selecione o tamanho -</option>
+      <option value="MINI">MINI</option>
+      <option value="P">P</option>
+      <option value="M">M</option>
+      <option value="G">G</option>
+      <option value="GG">GG</option>
+    </select>
+
+    <label for="data">Data:</label>
+    <input type="date" id="data" required>
+
+    <label for="hora">Horário:</label>
+    <input type="time" id="hora" required>
+
+    <label for="entrega">Entrega ou Retirada:</label>
+    <select id="entrega" required>
+      <option value="" disabled selected hidden>- Selecione uma opção -</option>
+      <option value="Retirada Getúlio">Retirada Getúlio</option>
+      <option value="Retirada Vinhedos">Retirada Vinhedos</option>
+      <option value="Entrega L. Borges">Entrega L. Borges</option>
+    </select>
+
+    <input type="text" id="observacao" placeholder="Observação (opcional)">
+
+    <button type="submit">Adicionar</button>
+  </form>
+
+  
+  <button id="imprimir">Imprimir Pedidos Ativos</button>
+  <div id="abas">
+    <button id="abaAtivos">Pedidos Ativos</button>
+    <button id="abaFinalizados">Pedidos Finalizados</button>
+  </div>
+
+  <div id="ativos">
+    <h2>Pedidos Ativos</h2>
+   
+  </div>
+
+  <div id="finalizados" style="display:none;">
+    <h2>Pedidos Finalizados</h2>
+    <table id="tabelaFinalizados">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Bolo</th>
+          <th>Tamanho</th>
+          <th>Data</th>
+          <th>Hora</th>
+          <th>Entrega</th>
+          <th>Observação</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  
+  <script src="script.js"></script>
+</body>
+</html>
